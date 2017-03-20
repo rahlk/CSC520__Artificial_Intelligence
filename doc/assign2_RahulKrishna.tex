@@ -1,0 +1,214 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{Assignment 2}
+\author{Rahul Krishna}
+\date{1 March 2017}
+\usepackage{fullpage}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsmath}%
+\usepackage{MnSymbol}%
+\usepackage{wasysym}%
+\usepackage{listings}
+\newcommand{\be}{\begin{equation*}\flushleft}
+\newcommand{\ee}{\end{equation*}\\[0.5cm]}
+\begin{document}
+
+\maketitle
+
+\section{Question 1}
+\begin{itemize}
+    \item \textit{STMT1: }All lions are animals
+    \item \textit{STMT2: }The head of a lion is the head of an animal
+\end{itemize}
+
+\subsection{}
+\begin{itemize}
+    \item \textit{STMT1: }$\forall X~~lion(X)\implies animal(X)$
+    \item \textit{STMT2: }$\forall X~~lion(X)\land head(H,X)\implies animal(X)\land head(H,X)$\\[0.25cm] (\textit{Note: this follows from the our understanding that not all entities are animals/lion/head.})
+\end{itemize}
+
+\subsection{}
+For generating CNF, let's treat the two sentences separately, i.e. \textit{all lions are animals} AND \textit{the head of a lion is the head of an animal.}
+
+\noindent Doing this, we get,
+$$
+\forall X~~ [(lion(X)\implies animal(X)) \land (lion(X)\land head(H,X)\implies animal(X)\land head(H,X))]
+$$
+Elimination of implications yields:
+$$
+\forall X~~ [(\neg~lion(X)~\lor~animal(X)) \land (\neg~(lion(X)\land head(H,X))~\lor~(animal(X)~\land~head(H,X)))]
+$$
+$$
+\forall X~~ [(\neg~lion(X)~\lor~animal(X))~\land~(\neg~lion(X)~\lor~\neg~head(H,X)~\lor~(animal(X)~\land~head(H,X)))]
+$$
+$$
+\forall X~~ [(\neg~lion(X)~\lor~animal(X))~\land~(\neg~lion(X)~\lor~\neg~head(H,X)~\lor~animal(X))~\land~(\neg~lion(X)~\lor~TRUE))]
+$$
+$$
+\forall X~~ [(\neg~lion(X)~\lor~animal(X))~\land~(\neg~lion(X)~\lor~\neg~head(H,X)~\lor~animal(X))~\land~TRUE)]
+$$
+$$
+\forall X~~ [(\neg~lion(X)~\lor~animal(X))~\land~(\neg~lion(X)~\lor~\neg~head(H,X)~\lor~animal(X))]
+$$
+$$
+\forall X~~ [(\neg~lion(X)~\lor~animal(X))~\land~(\neg~lion(X)~\lor~animal(X)~\lor~\neg~head(H,X))]
+$$\\[0.5cm]
+
+
+CNF = $\neg~lion(X)~\lor~animal(X)~\lor~\neg~head(H,X)$
+
+\subsection{}
+
+For proof, let's consider $(lion(x)~\implies~animal(x)~)\land~\neg~((lion(x)~\land~head(H,x))~\implies~(animal(x)~\land~head(H,x)))$
+
+Eliminating implication:
+$$
+(\neg~lion(x)~\lor~animal(x))\land~\neg~(\neg~(lion(x)~\land~head(H,x))~\lor~(animal(x)~\land~head(H,x)))
+$$
+Apply DeMorgans Laws:
+$$
+(\neg~lion(x)~\lor~animal(x))\land~\neg~(\neg~lion(x)~\lor~\neg~head(H,x)~\lor~(animal(x)~\land~head(H,x)))
+$$
+$$
+(\neg~lion(x)~\lor~animal(x))\land~\neg~(\neg~lion(x)~\lor~\neg~head(H,x)~\lor~(animal(x)~\land~head(H,x)))
+$$
+$$
+(\neg~lion(x)~\lor~animal(x))\land~\neg~((\neg~lion(x)~\lor~\neg~head(H,x)~\lor~animal(x))~\land~(\neg~lion(x)~\lor~\neg~head(H,x)~\lor~head(H,x)))
+$$
+$$
+(\neg~lion(x)~\lor~animal(x))\land~\neg~((\neg~lion(x)~\lor~\neg~head(H,x)~\lor~animal(x)))
+$$
+Again applying DeMorgan's Law:
+$$
+(\neg~lion(x)~\lor~animal(x))\land~\neg~(\neg~lion(x)~\lor~animal(x))~\land~\neg~\neg~head(H,x)
+$$
+There is a contradiction between the first two clauses, thus:
+$$
+\Box~\land~head(H,x)
+$$
+\section{Question 2}
+\be
+\exists x \forall y ([P(x,y)\land \exists z Q(y,z)] \implies [\exists u \exists v (P(x,v) \land R(y,v))])
+\ee
+
+\noindent\textit{Step 1}: Eliminate all implications
+\be
+\exists x \forall y (\neg[P(x,y)\and \forall z Q(y,z)] \lor [\exists u \exists v (P(x,v) \land R(y,v))])
+\ee
+
+\noindent\textit{Step 2}: Move $\neg$ inwards
+\be
+\exists x \forall y (\neg P(x,y) \lor \neg \forall z Q(y,z) \lor [\exists u \exists v (P(x,v) \land R(y,v))])
+\ee
+
+\noindent\textit{Step 3}: $\neg\forall x A$ becomes $\exists x~\neg A$
+\be
+\exists x \forall y (\neg P(x,y) \lor \exists z \neg  Q(y,z) \lor [\exists u \exists v (P(x,v) \land R(y,v))])
+\ee
+
+\noindent\textit{Step 4}: Standardize variables
+
+$\exists u$ can be removed
+\be
+\exists x \forall y (\neg P(x,y) \lor \exists z \neg  Q(y,z) \lor [\exists v (P(x,v) \land R(y,v))])
+\ee
+
+\noindent\textit{Step 5}: Skolemization
+
+We need skolem variables that depend on y. So, we replace x with F(y); z with G(y); and v with H(y):
+
+\be
+\forall y [(\neg P(F(y),y) \lor \neg  Q(y,G(y))) \lor (P(F(y),v) \land R(y,H(y)))]
+\ee
+
+\noindent\textit{Step 6}: Drop universal quantifiers
+
+\be
+(\neg P(F(y),y) \lor \neg  Q(y,G(y))) \lor (P(F(y),v) \land R(y,H(y)))
+\ee
+
+\noindent\textit{Step 7}: Distribute $\lor$ over $\land$
+
+\be
+[\neg P(F(y),y) \lor \neg  Q(y,G(y)) \lor P(F(y),v)] \land [\neg P(F(y),y) \lor \neg  Q(y,G(y)) \lor R(y, H(y))]
+\ee
+
+\newpage
+
+\section{Question 4}
+\subsection{}
+Answer: X=2
+\subsection{Steps}
+\begin{table}[ht!]
+\centering
+\caption{Count a in a list [a,[a],b]}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{1}{|c|}{Sub goals}                                                                 & \multicolumn{1}{c|}{Clause} & \multicolumn{1}{c|}{Substitutions} \\ \hline
+c({[}a, {[}a{]}, b{]}, X)                                                                       & 1                           & \{a/H, {[}{[}a{]},b{]}/T\}         \\ \hline
+c(a, N1),c({[}{[}a{]},b{]},M1),X is N1+M1                                                       & 2                           & \{1/N1\}                           \\ \hline
+c(a, 1),c({[}{[}a{]},b{]},M1),X is 1+M1                                                         & 3                           & \{{[}a{]}/H, b/T\}                 \\ \hline
+c(a, 1),c({[}a{]},M2),c({[}b{]},M3),M1 is M2+M3,,X is 1+M1                                      & 4                           & \{a/H, {[}{]}/T\}                  \\ \hline
+c(a,1),c(a,M4),c({[}{]},M5),M2 is M4+M5,c({[}b{]},M3),M1 is M2+M3,,X is 1+M1                    & 5                           & \{1/M4\}                           \\ \hline
+c(a,1),c(a,1),c({[}{]},M5),M2 is 1+M5,c({[}b{]},M3),M1 is M2+M3,,X is 1+M1                      & 6                           & \{0/M5\}                           \\ \hline
+c(a,1),c(a,1),c({[}{]},0),M2 is 1+0,c({[}b{]},M3),M1 is M2+M3,,X is 1+M1                        & 7                           & \{1/M2\}                           \\ \hline
+c(a,1),c(a,1),c({[}{]},0),1 is 1+0,c({[}b{]},M3),M1 is 1+M3,,X is 1+M1                          & 8                           & \{{[}b{]}/H, {[}{]}/T\}            \\ \hline
+c(a,1),c(a,1),c({[}{]},0),1 is 1+0,c({[}b{]},M6),c({[}{]},M7),M3 is M6+M7,M1 is 1+M3,,X is 1+M1 & 9                           & \{0/M6\}                           \\ \hline
+c(a,1),c(a,1),c({[}{]},0),1 is 1+0,c({[}b{]},0),c({[}{]},M7),M3 is 0+M7,M1 is 1+M3,,X is 1+M1   & 10                          & \{0/M7\}                           \\ \hline
+c(a,1),c(a,1),c({[}{]},0),1 is 1+0,c({[}b{]},0),c({[}{]},0),M3 is 0+0,M1 is 1+M3,,X is 1+M1     & 11                          & \{0/M3\}                           \\ \hline
+c(a,1),c(a,1),c({[}{]},0),1 is 1+0,c({[}b{]},0),c({[}{]},0),M3 is 0+0,M1 is 1+0,,X is 1+M1      & 12                          & \{1/M1\}                           \\ \hline
+c(a,1),c(a,1),c({[}{]},0),1 is 1+0,c({[}b{]},0),c({[}{]},0),M3 is 0+0,M1 is 1+0,,X is 1+1       & 11                          & \{2/X\}                            \\ \hline
+c({[}a, {[}a{]}, b{]}, 2)                                                                       & 13                          & END                                \\ \hline
+\end{tabular}
+\end{table}
+\subsection{}
+The \texttt{!} operator in prolog finds a cut in a rule. When this is encountered, the code will not backtrack on the choices it has made. 
+
+For instance, in the code, at line 2, we have \texttt{c(a,1):-1.}, the code would have chosen the value of 1 for the temporary variable that is held in that location. Now, Prolog will consider 1 to be the only option for that temporary variable for that value, even if there are other possibilities in the database. However, in our code, there is only one possibility for \texttt{c(a,1)}, i.e., we don't have any new rules when this condition is encountered. Therefore, when \texttt{!} is removed, we still get the same answer.
+\subsection{}
+
+If we remove the \texttt{!} operator from the second line, in addition to the first line, we still get the same answer. Again, this is because of the limited set of rules that are defined in our code. As mentioned above, the cut operator prevents the code from backtracking and assigning new values to an already held variable. The cut symbol appears at the end of the line, and there is possibly only one valid way to add the total number of a's apprearing in the list. Therefore, in addition to removing \texttt{!} in line 2, removing it in line 1 doesn't change the answer.
+
+\subsection{Question 5}
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=prolog]
+edge(tom,diabetics).
+edge(diabetics,sugar).
+edge(snickers,candy).
+edge(candy,sugar).
+
+walk(A,B,V) :-       
+  edge(A,X) ,        
+  not(member(X,V)) , 
+  (                  
+    B = X
+    ;                 
+    walk(X,B,[A|V]) 
+  ).                  
+
+% Check if a path exists
+path(X,Y):- walk(X,Y,[]). 
+
+% Define Edges
+isa(X,Y):- X == tom, Y==diabetics, path(X,Y).
+shouldAvoid(X,Y):- X == diabetics, Y == sugar, path(X,Y).
+contains(X,Y):- X == candy, Y == sugar, path(X,Y).
+ako(X,Y):- X == snickers, Y=candy, path(X,Y).
+
+%
+shouldAvoid(X,Y):-
+  isa(X,diabetics),
+  contains(Y,sugar).
+
+shouldAvoid(X,Y):-
+  X == diabetics,
+  contains(Y,sugar).
+
+contains(X,Y):-
+  ako(X,candy).
+\end{lstlisting}
+\end{minipage}
+\end{document}
